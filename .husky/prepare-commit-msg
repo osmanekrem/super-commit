@@ -1,0 +1,10 @@
+# Check if this is not an amend, merge, or squash commit
+if [ -z "$2" ]; then
+  # Run super-commit in interactive mode
+  exec < /dev/tty && npx super-commit
+  
+  # If super-commit succeeds, prevent the default commit message editor
+  if [ $? -eq 0 ]; then
+    exit 0
+  fi
+fi

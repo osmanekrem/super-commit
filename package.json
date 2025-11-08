@@ -12,7 +12,9 @@
     "clean": "rm -rf dist",
     "dev": "tsc --watch",
     "prepublishOnly": "npm run build",
-    "test": "echo \"Tests coming soon\" && exit 0"
+    "test": "echo \"Tests coming soon\" && exit 0",
+    "commit": "super-commit",
+    "prepare": "husky"
   },
   "keywords": [
     "commit",
@@ -44,18 +46,18 @@
     ".supercommitrc.example.json"
   ],
   "dependencies": {
-    "commander": "^11.1.0",
-    "inquirer": "^9.2.12",
-    "cosmiconfig": "^9.0.0",
-    "simple-git": "^3.21.0",
     "chalk": "^5.3.0",
-    "zod": "^3.22.4",
-    "fs-extra": "^11.2.0"
+    "commander": "^11.1.0",
+    "cosmiconfig": "^9.0.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.12",
+    "simple-git": "^3.21.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "^20.10.4",
-    "@types/inquirer": "^9.0.7",
     "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.7",
+    "@types/node": "^20.10.4",
     "typescript": "^5.3.3"
   },
   "engines": {

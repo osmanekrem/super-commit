@@ -1,0 +1,24 @@
+# Validate commit message using super-commit
+# Try to use the local installation if available, otherwise use npx
+if [ -f "$(dirname "$0")/../dist/cli.js" ]; then
+  node "$(dirname "$0")/../dist/cli.js" validate --file "$1"
+else
+  npx super-commit validate --file "$1"
+fi
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "════════════════════════════════════════════════════════════"
+  echo "❌ COMMIT REJECTED"
+  echo "════════════════════════════════════════════════════════════"
+  echo ""
+  echo "Your commit message does not follow conventional commits format."
+  echo ""
+  echo "💡 Quick Fix Options:"
+  echo "  1. Use: npx super-commit (interactive mode)"
+  echo "  2. Or format: <type>(<scope>): <subject>"
+  echo ""
+  echo "📖 More info: https://www.conventionalcommits.org"
+  echo ""
+  exit 1
+fi

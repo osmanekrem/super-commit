@@ -5,6 +5,7 @@ import chalk from "chalk";
 import { commitCommand } from "./commands/commit";
 import { initCommand } from "./commands/init";
 import { huskyCommand } from "./commands/husky";
+import { validateCommand } from "./commands/validate";
 import { CommitOptions } from "./types/config";
 
 const program = new Command();
@@ -19,8 +20,10 @@ program
   )
   .version(packageJson.version);
 
-// Default command (commit)
+// Commit command (default)
 program
+  .command("commit", { isDefault: true })
+  .description("Create a conventional commit")
   .argument(
     "[message]",
     "Commit message (optional, triggers interactive mode if not provided)"
@@ -61,6 +64,23 @@ program
     await huskyCommand();
   });
 
+// Validate command
+program
+  .command("validate")
+  .description("Validate a commit message against conventional commits format")
+  .option("-m, --message <message>", "Commit message to validate")
+  .option("-f, --file <file>", "File containing commit message")
+  .option("-s, --silent", "Silent mode (no output, only exit code)")
+  .action(async function (this: any) {
+    const opts = this.opts();
+    const isValid = await validateCommand({
+      message: opts.message,
+      file: opts.file,
+      silent: opts.silent,
+    });
+    process.exit(isValid ? 0 : 1);
+  });
+
 // Help customization
 program.on("--help", () => {
   console.log("");
@@ -86,6 +106,14 @@ program.on("--help", () => {
   console.log("");
   console.log("  # Setup Husky integration");
   console.log(chalk.gray("  $ npx super-commit husky"));
+  console.log("");
+  console.log("  # Validate commit message");
+  console.log(
+    chalk.gray('  $ npx super-commit validate --message "feat: add feature"')
+  );
+  console.log(
+    chalk.gray("  $ npx super-commit validate --file .git/COMMIT_EDITMSG")
+  );
   console.log("");
   console.log(chalk.cyan.bold("Configuration:"));
   console.log("");

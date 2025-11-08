@@ -9,8 +9,9 @@ A powerful, fully customizable conventional commit CLI tool that makes creating 
 - **🎨 Fully Customizable**: Configure commit types, scopes, validation rules, and more
 - **🌍 Multi-language Support**: English and Turkish (Türkçe) out of the box
 - **😀 Emoji Support**: Optional emoji integration for commit types
-- **🐶 Husky Integration**: Automatic setup for git hooks
+- **🐶 Husky Integration**: Automatic setup for git hooks with optional validation
 - **✅ Smart Validation**: Comprehensive validation with helpful error messages
+- **🔒 Commit Message Validation**: Standalone validate command for CI/CD and git hooks
 - **🎭 Beautiful CLI**: Colorful, user-friendly interface
 
 ## 📦 Installation
@@ -232,10 +233,25 @@ This command will:
 
 1. Check if Husky is installed (and install it if needed)
 2. Initialize Husky in your project
-3. Create a `prepare-commit-msg` hook
-4. Update your `package.json` scripts
+3. Create a `prepare-commit-msg` hook (for interactive mode)
+4. **Ask if you want to enforce conventional commits validation**
+5. Optionally create a `commit-msg` hook (for validation)
+6. Update your `package.json` scripts
 
-After setup, every `git commit` will use Super Commit automatically!
+### Two Integration Modes
+
+**Interactive Mode Only** (No validation):
+
+- Uses Super Commit's interactive prompts for creating commits
+- Allows any commit message format with `git commit -m`
+
+**Interactive + Validation Mode** (Recommended):
+
+- Uses Super Commit's interactive prompts for creating commits
+- **Rejects non-conventional commits** made with `git commit -m`
+- Ensures all commits follow conventional format
+
+After setup, Super Commit will be integrated with your git workflow!
 
 ### Manual Husky Setup
 
@@ -251,11 +267,12 @@ npx husky init
 2. Create `.husky/prepare-commit-msg`:
 
 ```bash
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
-
+# Check if this is not an amend, merge, or squash commit
 if [ -z "$2" ]; then
+  # Run super-commit in interactive mode
   exec < /dev/tty && npx super-commit
+
+  # If super-commit succeeds, prevent the default commit message editor
   if [ $? -eq 0 ]; then
     exit 0
   fi
@@ -266,6 +283,87 @@ fi
 
 ```bash
 chmod +x .husky/prepare-commit-msg
+```
+
+4. (Optional) Create `.husky/commit-msg` for validation:
+
+```bash
+# Validate commit message using super-commit
+# Try to use the local installation if available, otherwise use npx
+if [ -f "$(dirname "$0")/../dist/cli.js" ]; then
+  node "$(dirname "$0")/../dist/cli.js" validate --file "$1"
+else
+  npx super-commit validate --file "$1"
+fi
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "════════════════════════════════════════════════════════════"
+  echo "❌ COMMIT REJECTED"
+  echo "════════════════════════════════════════════════════════════"
+  echo ""
+  echo "Your commit message does not follow conventional commits format."
+  echo ""
+  echo "💡 Quick Fix Options:"
+  echo "  1. Use: npx super-commit (interactive mode)"
+  echo "  2. Or format: <type>(<scope>): <subject>"
+  echo ""
+  echo "📖 More info: https://www.conventionalcommits.org"
+  echo ""
+  exit 1
+fi
+```
+
+5. Make it executable:
+
+```bash
+chmod +x .husky/commit-msg
+```
+
+## ✅ Validate Command
+
+Standalone command to validate commit messages. Perfect for CI/CD pipelines and custom git hooks:
+
+```bash
+# Validate a message string
+npx super-commit validate --message "feat: add new feature"
+
+# Validate from a file (useful in git hooks)
+npx super-commit validate --file .git/COMMIT_EDITMSG
+
+# Silent mode (only exit code, no output)
+npx super-commit validate --message "feat: test" --silent
+echo $?  # 0 = valid, 1 = invalid
+```
+
+### Use Cases
+
+**CI/CD Pipeline:**
+
+```yaml
+# GitHub Actions example
+- name: Validate Commit Message
+  run: |
+    npx super-commit validate --message "${{ github.event.head_commit.message }}"
+```
+
+**Custom Git Hook:**
+
+```bash
+#!/bin/bash
+# .git/hooks/commit-msg
+npx super-commit validate --file "$1"
+```
+
+**Pre-receive Hook (Server-side):**
+
+```bash
+#!/bin/bash
+while read oldrev newrev refname; do
+  git log $oldrev..$newrev --format=%s | while read msg; do
+    echo "$msg" | npx super-commit validate --message "$msg" --silent || exit 1
+  done
+done
 ```
 
 ## 📝 Conventional Commits Format
