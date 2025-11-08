@@ -29,7 +29,7 @@
     "semantic-release",
     "changelog"
   ],
-  "author": "",
+  "author": "Osman Ekrem Korkmaz <korkmazosmanekrem@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
