@@ -1,0 +1,22 @@
+src
+tsconfig.json
+.gitignore
+.vscode
+.idea
+*.log
+node_modules
+.DS_Store
+coverage
+*.tgz
+
+# Keep example config
+!.supercommitrc.example.json
+
+# Development files
+.editorconfig
+.prettierrc
+.eslintrc
+
+# Plan file
+*.plan.md
+

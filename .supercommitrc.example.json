@@ -1,0 +1,105 @@
+{
+  "language": "en",
+  "types": [
+    {
+      "value": "feat",
+      "name": "feat: A new feature",
+      "description": "Introduces a new feature to the codebase",
+      "emoji": "✨"
+    },
+    {
+      "value": "fix",
+      "name": "fix: A bug fix",
+      "description": "Patches a bug in your codebase",
+      "emoji": "🐛"
+    },
+    {
+      "value": "docs",
+      "name": "docs: Documentation only changes",
+      "description": "Changes to documentation only",
+      "emoji": "📚"
+    },
+    {
+      "value": "style",
+      "name": "style: Changes that do not affect the meaning of the code",
+      "description": "Code style changes (white-space, formatting, missing semi-colons, etc)",
+      "emoji": "💎"
+    },
+    {
+      "value": "refactor",
+      "name": "refactor: A code change that neither fixes a bug nor adds a feature",
+      "description": "Code refactoring without changing functionality",
+      "emoji": "📦"
+    },
+    {
+      "value": "perf",
+      "name": "perf: A code change that improves performance",
+      "description": "Performance improvements",
+      "emoji": "🚀"
+    },
+    {
+      "value": "test",
+      "name": "test: Adding missing tests or correcting existing tests",
+      "description": "Adding or updating tests",
+      "emoji": "🚨"
+    },
+    {
+      "value": "build",
+      "name": "build: Changes that affect the build system or external dependencies",
+      "description": "Build system or dependency changes",
+      "emoji": "🛠️"
+    },
+    {
+      "value": "ci",
+      "name": "ci: Changes to our CI configuration files and scripts",
+      "description": "Continuous integration changes",
+      "emoji": "⚙️"
+    },
+    {
+      "value": "chore",
+      "name": "chore: Other changes that don't modify src or test files",
+      "description": "Other changes that don't modify source or test files",
+      "emoji": "♻️"
+    },
+    {
+      "value": "revert",
+      "name": "revert: Reverts a previous commit",
+      "description": "Reverts a previous commit",
+      "emoji": "🗑️"
+    }
+  ],
+  "scopes": [
+    { "value": "api", "name": "api: API related changes" },
+    { "value": "ui", "name": "ui: User interface changes" },
+    { "value": "db", "name": "db: Database related changes" },
+    { "value": "config", "name": "config: Configuration changes" },
+    { "value": "deps", "name": "deps: Dependency updates" }
+  ],
+  "validation": {
+    "subjectMaxLength": 72,
+    "subjectMinLength": 1,
+    "bodyMaxLineLength": 100,
+    "typeRequired": true,
+    "scopeRequired": false,
+    "subjectRequired": true,
+    "allowCustomScopes": true,
+    "allowEmptyBody": true
+  },
+  "promptMessages": {
+    "type": "Select the type of change that you're committing:",
+    "scope": "Denote the SCOPE of this change (optional):",
+    "customScope": "Enter a custom scope:",
+    "subject": "Write a SHORT, IMPERATIVE tense description of the change:",
+    "body": "Provide a LONGER description of the change (optional):",
+    "breaking": "Are there any breaking changes?",
+    "breakingBody": "Describe the breaking changes:",
+    "issues": "Add issue references (e.g. \"fix #123\", \"re #456\"):"
+  },
+  "format": {
+    "useEmoji": false,
+    "emojiPosition": "before-type",
+    "separator": ":",
+    "lineBreaksBetweenSections": 1
+  }
+}
+
