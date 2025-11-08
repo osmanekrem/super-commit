@@ -1,5 +1,6 @@
 src
 tsconfig.json
+tsconfig.prod.json
 .gitignore
 .vscode
 .idea
@@ -19,4 +20,8 @@ coverage
 
 # Plan file
 *.plan.md
+
+# Source maps and declarations (if any slip through)
+*.map
+*.d.ts
 
